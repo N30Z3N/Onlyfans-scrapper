@@ -4,9 +4,6 @@
 import os, requests, zipfile, time
 from rich.console import Console
 
-# Class import
-from Only.util.os import copyTree, rem_folder
-
 # Variable
 console = Console()
 
@@ -23,47 +20,18 @@ def get_install_version():
 
 def main_update():
 
-    # Get last version from req
     json = requests.get("https://api.github.com/repos/ghost6446/Onlyfans-scrapper/releases").json()[0]
     stargazers_count = requests.get("https://api.github.com/repos/ghost6446/Onlyfans-scrapper").json()['stargazers_count']
     last_version = json['name']
-    version_note = json['body']
-
-    # Info download
     down_count = json['assets'][0]['download_count']
-    down_name = json['assets'][0]['name']
-    down_url = json['assets'][0]['browser_download_url']
 
     # Get percentaul star
     if down_count > 0 and stargazers_count > 0:
         percentual_stars = round(stargazers_count / down_count * 100, 2)
-    else:
-        percentual_stars = 0
+    else: percentual_stars = 0
 
-    # Check if latest version
     if get_install_version() != last_version:
-        
-        os.makedirs("temp", exist_ok=True)
-        console.log(f"[green]Need to update to [white]=> [red]{last_version}")
-
-        down_msg_obj = {'name': down_name, 'n_download': down_count, 'msg': version_note}
-        console.log(f"Last version {down_msg_obj}")
-
-        # Save latest zip file
-        r = requests.get(down_url)
-        open(f"temp/{down_name}", "wb").write(r.content)
-
-        console.log("[green]Extract file")
-        with zipfile.ZipFile(f"temp/{down_name}", "a") as zip:
-            zip.extractall("")
-
-        # Copy tree
-        os.rename("Onlyfans-scrapper-main", "Onlyfans-scrapper")
-        copyTree(src=os.path.join(base, down_name.split(".")[0].replace("-main", "")) + "\\", dst=base + "\\")
-
-        console.log("[green]Clean ...")
-        rem_folder("temp")
-        rem_folder("Onlyfans-scrapper")
+        console.log(f"[red]A new version is available")
 
     else:
         console.log("[red]Everything up to date")

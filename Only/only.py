@@ -1,21 +1,18 @@
 # 9.08.2023 -> 12.09.2023 -> 24.10.2023
 
 # Class import
-from Only.util.Driver import Driver
+from Only.util.driver import Driver
 from Only.util.api import get_creator, dump_post, donwload_medias, dump_chat
+from Only.util.console import console
 from Only.util.dw_image import donwload_image
-from Only.update import main_update
-
+from Only.upload.update import main_update
 
 # General import
 import time, json, sys, os
 from seleniumwire.utils import decode
 from selenium.webdriver.common.by import By
-from rich.console import Console
-
 
 # Variable
-console = Console()
 sleep_load_page = 12
 
 

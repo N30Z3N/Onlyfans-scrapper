@@ -95,7 +95,7 @@ def donwload_media(media, file_name):
                 console.log(f"[red] ERROR [{media['id']}] => {r.status_code}")
         
         else:
-            console.log("[cyan]Unlock content")
+            console.log("[red]Unlock content")
     
     else:
         console.log("[cyan]Skip")
