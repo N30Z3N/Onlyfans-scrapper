@@ -1,7 +1,7 @@
 # 9.08.2023 -> 12.09.2023 -> 24.10.2023
 
 # Class import
-from Only.util.driver import Driver
+from Only.util.Driver import Driver
 from Only.util.api import get_creator, dump_post, donwload_medias, dump_chat
 from Only.util.console import console
 from Only.util.dw_image import donwload_image
