@@ -317,7 +317,9 @@ class Main:
     def make_login(self):
         driver = Driver()
         driver.create(False)
-        driver.get_page(url="https://onlyfans.com/", sleep=999)
+        console.log("[cyan]LOAD HOME PAGE")
+        driver.get_page(url="https://onlyfans.com/", sleep=1)
+        time.sleep(999)
 
     def get_url(self):
         if(self.username != None and self.username != ""):

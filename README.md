@@ -1,6 +1,14 @@
+<p align="center">
+	<img src="Only/assets/min_logo.png" style="max-width: 55%;" alt="video working" />
+</p>
+
 # Onlyfans downloader
 
 Script to download media and posts from creators on OnlyFans (no payment media if not subscribe).
+
+<p align="center">
+	<img src="Only/assets/run.gif" style="max-width: 55%;" alt="video working" />
+</p>
 
 <h3>DISCLAIMERS:</h3>
 <ul>
@@ -12,54 +20,40 @@ Script to download media and posts from creators on OnlyFans (no payment media i
     </li>
 <h3>
 
-## Installation
+## Requirement
+
+* python [3.9](https://www.python.org/downloads/release/python-390/)
+* openssl [site](https://slproweb.com/products/Win32OpenSSL.html)
+
+## Installation for WIN
+
+* requirement for library of python
 
 ```bash
-    Install python 3.9 -> https://www.python.org/downloads/release/python-390/
-    pip install -r requirements.txt
+	pip install -r requirement.txt
 ```
 
-## Run Locally
+## Features
 
-Clone the project
+* get all_post()
+* get_last_post()
+* get_all_media()
+* get_last_media()
+* get_stories()
+* get_archived()
+* get_streams()
+* get_chat()                  #NEW
+* get_buttons()               #NEW
+* click_on_subscrive()        #NEW
+* get_profile_photo()         #NEW
+* get_avatar_photo()          #NEW
 
-```bash
-  python Run.py
-```
-
-## Usage/Examples
-
-```python
-    [START]
-    from Only.only import Main
-    on = Only("creator_name")
-    # Only of first launch -> on.make_login()
-
-    [OTHER FUNC]
-    on.get_all_post()
-    on.get_last_post()
-  
-    on.get_all_media()
-    on.get_last_media()
-
-    on.get_stories()
-    on.get_archived()
-    on.get_streams()
-
-    on.get_chat()               #NEW
-    on.get_buttons()            #NEW
-    on.click_on_subscrive()     #NEW
-
-    on.get_profile_photo()     #NEW
-    on.get_avatar_photo()      #NEW
-
-```
 
 ## ERROR [NO MEDIA]
 TO FIX NOT ALL MEDIA FIND: go to util\api.py find function "scroll_to_end" and change variable "sleep_load" until he can get to the bottom of the page, after that go to only.py and change driver.create(False) to driver.create (True) to remove headless of browser to test it and see what it do.
 
 
-## Old tutorial
+## Old tutorial not valid
 https://www.youtube.com/watch?v=e6h13W3mVhA&t=48s
 
 ## Authors
