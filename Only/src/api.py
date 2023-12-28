@@ -2,11 +2,10 @@
 
 # Import
 import requests, time, os
-from rich.console import Console
+from Only.src.util.console import console
 from concurrent.futures import ThreadPoolExecutor
 
 # Variable
-console = Console()
 arr_media = []
 
 
@@ -28,6 +27,7 @@ def get_creator(radice, msg):
     console.log(f"[blue]Info [green]{msg} [white]=> [cyan]{user_data}")
 
 
+# [dumpo post and chat]
 def dump_post(radice):
 
     if(len(radice) != 0):
@@ -64,8 +64,6 @@ def dump_chat(radice):
     for media in radice:
         if media['canView']:
 
-            print("..")
-
             if media['type'] == "photo": 
                 arr_media.append({
                     'id': media['id'],
@@ -80,6 +78,7 @@ def dump_chat(radice):
                 })
 
 
+# [download single and all media]
 def donwload_media(media, file_name):
 
     if(not os.path.isfile(file_name)):
@@ -98,7 +97,7 @@ def donwload_media(media, file_name):
             console.log("[red]Unlock content")
     
     else:
-        console.log("[cyan]Skip")
+        console.log(f"[red]Skip: [green]{file_name}")
 
 def donwload_medias(folder_name, sub_folder):
 

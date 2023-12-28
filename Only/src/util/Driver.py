@@ -9,10 +9,7 @@ from seleniumwire import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-from rich.console import Console
-
-# Variable
-console = Console()
+from Only.src.util.console import console
 
 class Driver:
 
@@ -21,10 +18,6 @@ class Driver:
     driver = None
 
     def __init__(self) -> None:
-
-        self.service = Service(ChromeDriverManager().install())
-
-        self.options = webdriver.ChromeOptions()
 
         # For linux
         console.log("[green]Close all instance of chrome")
@@ -36,7 +29,10 @@ class Driver:
         elif platform == "win32":
             try: subprocess.check_output("TASKKILL /IM chrome.exe /F",  shell=True, creationflags= 0x08000000) 
             except: pass
-            
+
+        self.service = Service(ChromeDriverManager().install())
+        self.options = webdriver.ChromeOptions()
+
     def create(self, headless=False, minimize=False):
 
         if(headless): 
@@ -82,26 +78,30 @@ class Driver:
         scroll_count = 0
         last_height = self.driver.execute_script("return document.body.scrollHeight")
 
-        while True:
+        try:
+            while True:
 
-            console.log(f"[blue]Scroll [red][{scroll_count}]")
-            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight + 500);")
-            scroll_count+=1
+                console.log(f"[blue]Scroll [red][{scroll_count}]")
+                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight + 500);")
+                scroll_count+=1
 
-            time.sleep(sleep_load)
-            new_height = self.driver.execute_script("return document.body.scrollHeight")
+                time.sleep(sleep_load)
+                new_height = self.driver.execute_script("return document.body.scrollHeight")
 
-            if new_height == last_height:
+                if new_height == last_height:
+                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight + 500);")
+                    time.sleep(sleep_load)
+                    break
+
+                if scroll_count == max_scroll:
+                    break
+
+                last_height = new_height
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight + 500);")
                 time.sleep(sleep_load)
-                break
 
-            if scroll_count == max_scroll:
-                break
-
-            last_height = new_height
-            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight + 500);")
-            time.sleep(sleep_load)
+        except KeyboardInterrupt:
+            console.log("[red]\nCtrl+C pressed. Continuing ...")
 
         console.log("[green]End reach")
     

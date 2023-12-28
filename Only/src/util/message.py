@@ -1,7 +1,7 @@
 # 22.12.2023
 
 # Import
-from Only.util.console import console
+from Only.src.util.console import console
 
 # [Function]
 def hello():

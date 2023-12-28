@@ -2,8 +2,8 @@
 	<img src="Only/assets/min_logo.png" style="max-width: 55%;" alt="video working" />
 </p>
 
-# Onlyfans downloader
 
+# Onlyfans downloader
 Script to download media and posts from creators on OnlyFans (no payment media if not subscribe).
 
 <p align="center">
@@ -20,40 +20,36 @@ Script to download media and posts from creators on OnlyFans (no payment media i
     </li>
 <h3>
 
-## Requirement
 
+## Requirement
 * python [3.9](https://www.python.org/downloads/release/python-390/)
-* openssl [site](https://slproweb.com/products/Win32OpenSSL.html)
+
 
 ## Installation for WIN
-
 * requirement for library of python
 
 ```bash
-	pip install -r requirement.txt
+pip install -r requirement.txt
 ```
 
-## Features
 
-* get all_post()
-* get_last_post()
-* get_all_media()
-* get_last_media()
-* get_stories()
-* get_archived()
-* get_streams()
-* get_chat()                  #NEW
-* get_buttons()               #NEW
-* click_on_subscrive()        #NEW
-* get_profile_photo()         #NEW
-* get_avatar_photo()          #NEW
+## Features
+* Download all post
+* Download last post (10)
+* Download all media   
+* Download last media (10)
+* Download media of char (with ID)
+* Get social buttons
+* Get list subscribe (10)
+* Download profile photo
+* Donwload avatar photo
 
 
 ## ERROR [NO MEDIA]
-TO FIX NOT ALL MEDIA FIND: go to util\api.py find function "scroll_to_end" and change variable "sleep_load" until he can get to the bottom of the page, after that go to only.py and change driver.create(False) to driver.create (True) to remove headless of browser to test it and see what it do.
+TO FIX NOT ALL MEDIA FIND: go to Only\only.py find variable "scroll_to_end" and change it until he can get to the bottom of the page.
 
 
-## Old tutorial not valid
+## Old tutorial (not valid !!!)
 https://www.youtube.com/watch?v=e6h13W3mVhA&t=48s
 
 ## Authors

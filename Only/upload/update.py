@@ -37,7 +37,7 @@ def main_update():
         console.log("[red]Everything up to date")
     
     print("\n")
-    console.log(f"[red]Only was downloaded [yellow]{down_count} [red]times, but only [yellow]{percentual_stars} [red]of You(!) have starred it. \n\
-        [cyan]Help the repository grow today, by leaving a [yellow]star [cyan]on it and sharing it to others online!")
+    console.log(f"[red]Only was downloaded [yellow]{down_count} [red]times, but only [yellow]{percentual_stars}% [red]of You(!!) have starred it. \n\
+        [cyan]Help the repository grow today, by leaving a [yellow]star [cyan]and [yellow]sharing [cyan]it to others online!")
     time.sleep(10)
     print("\n")
