@@ -25,9 +25,7 @@ Script to download media and posts from creators on OnlyFans (no payment media i
 * python [3.9](https://www.python.org/downloads/release/python-390/)
 
 
-## Installation for WIN
-* requirement for library of python
-
+## Install library
 ```bash
 pip install -r requirement.txt
 ```
