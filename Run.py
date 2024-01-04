@@ -1,71 +1,47 @@
-# 23.12.23 -> 28.12.23
+# 31.12.23
 
 # Class import
-from Only.src.util.message import hello
-from Only.src.util.console import console, msg
-from Only.only import Main
+from Src.Api.api import Call_api
+from Src.Util.Generator.generate_headers import generate, make_login
+from Src.Util.Helper.console import console, msg
+from Src.Util.Other.msg import hello
+from Src.Util.upload.upload_v import main_update
 
-# General import
-import sys
+call_api = Call_api()
 
-def run():
+def main():
 
     hello()
+    main_update()
 
-    cp = int(msg.ask(f"""        
-        [yellow][Auto]
-        [red][0]: [green]Make login
-                     
-        [yellow][Download]
-        [red][1]: [green]Get all post
-        [red][2]: [green]Get last post
-        [red][3]: [green]Get all media     
-        [red][4]: [green]Get last media
-                     
-        [yellow][Profile data]
-        [red][5]: [green]Get char (whit id)
-                     
-        [yellow][Profile info]
-        [red][6]: [green]Get social buttons
-        [red][7]: [green]Get list subscribe
-        [red][8]: [green]Download profile photo
-        [red][9]: [green]Donwload avatar photo
+    if msg.ask("[green]Do you want to auto generare headers file? (With login)") == "y":
+        if msg.ask("[green]Have yuo already logged in ?") == "n":
+            make_login()
+        else:
+            generate()
 
-    """))
-
-    print("\n\n")
-    us = str(msg.ask("[red]Insert username: ")).strip()
     print("\n")
-    main_only = Main(us)
+    call_api.get_me()
 
-    # SWITCH DOESNT EXIST IN PYTHON 3.9
-    if cp == 0:
-        main_only.make_login()
+    print("\n")
+    call_api.get_follow()
 
-    elif cp == 1:
-        main_only.get_all_post()
-    elif cp == 2:
-        main_only.get_last_post()
-    elif cp == 3:
-        main_only.get_all_media()
-    elif cp == 4:
-        main_only.get_last_media()
+    print("\n")
+    if msg.ask("[green]Do you want to donwload avatar and header") == "y":
+        call_api.donwload_avatar()
 
-    elif cp == 5:
-        id_chat = str(msg.ask("[red]Insert chat id: ")).strip()
-        main_only.get_chat(id_chat)
+    print("\n")
+    if msg.ask("[green]Do you want to donwload stories") == "y":
+        call_api.download_stories()
+    
+    print("\n")
+    if msg.ask("[green]Do you want to donwload all post") == "y":
+        call_api.download_posts()
 
-    elif cp == 6:
-        main_only.get_social_buttons()
-    elif cp == 7:
-        main_only.get_list_first_subscribe()
-    elif cp == 8:
-        main_only.get_profile_photo()
-    elif cp == 9:
-        main_only.get_avatar_photo()
+    print("\n")
+    if msg.ask("[green]Do you want to donwload all highligth") == "y":
+        call_api.donwload_high()
 
-    else:
-        console.log("[red]Wrong")
-        sys.exit(0)
+    console.log("[red]End")
 
-run()
+main()

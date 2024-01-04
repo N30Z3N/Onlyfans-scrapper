@@ -1,7 +1,8 @@
+requests
+inquirer
+rich
+tqdm
 selenium
 selenium-wire
-webdriver-manager
-bs4
-requests
-futures
-rich
+webdriver_manager
+random-user-agent
