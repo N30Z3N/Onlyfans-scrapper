@@ -15,7 +15,7 @@ def main():
     main_update()
 
     if msg.ask("[green]Do you want to auto generare headers file? (With login)") == "y":
-        if msg.ask("[green]Have yuo already logged in ?") == "n":
+        if msg.ask("[green]Have you already logged in ?") == "n":
             make_login()
         else:
             generate()
@@ -42,6 +42,6 @@ def main():
     if msg.ask("[green]Do you want to donwload all highligth") == "y":
         call_api.donwload_high()
 
-    console.log("[red]End")
+    console.log("\n[red]End")
 
 main()
