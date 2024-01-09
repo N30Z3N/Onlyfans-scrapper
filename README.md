@@ -6,6 +6,7 @@
 Script to download file from OnlyFans (no payment media if not subscribe).
 
 ## Requirement
+* chrome [win](https://www.google.it/intl/it/chrome/)
 * python [3.9](https://www.python.org/downloads/release/python-390/)
 
 ## Installation library
