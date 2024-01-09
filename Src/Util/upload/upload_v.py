@@ -23,14 +23,14 @@ def main_update():
     last_version = json['name']
     down_count = json['assets'][0]['download_count']
 
-    if down_count > 0 and stargazers_count > 0: percentual_stars = round(stargazers_count / down_count * 100, 2)
-    else: percentual_stars = 0
+    if down_count > 0 and stargazers_count > 0: percentage_stars = round(stargazers_count / down_count * 100, 2)
+    else: percentage_stars = 0
 
     if get_install_version() != last_version: console.print(f"[red]=> A new version is available")
     else: console.print("[red]=> Everything up to date")
     
     print("\n")
-    console.print(f"[red]{repo_name} was downloaded [yellow]{down_count} [red]times, but only [yellow]{percentual_stars}% [red]of You(!!) have starred it. \n\
+    console.print(f"[red]{repo_name} was downloaded [yellow]{down_count} [red]times, but only [yellow]{percentage_stars}% [red]of You(!!) have starred it. \n\
         [cyan]Help the repository grow today, by leaving a [yellow]star [cyan]and [yellow]sharing [cyan]it to others online!")
     time.sleep(2.5)
     print("\n")

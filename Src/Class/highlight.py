@@ -47,7 +47,7 @@ class Single_stories():
     def __init__(self, json) -> None:
         self.id = json['id']
         self.title = json['title']
-        self.stori_count = json['storiesCount']
+        self.story_count = json['storiesCount']
         self.media = []
 
         for json_story in json['stories']:

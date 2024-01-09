@@ -17,12 +17,12 @@ def download(url, path, headers=None, ss=2):
                 with open(path, 'wb+') as f:
                     f.write(req.content)
             else:
-                console.log(f"[red]Failed to download file: {path}.")
+                console.log(f"[red]Failed to download file: {path}, status: {req.status_code}")
                 time.sleep(ss)
 
         except Exception as e:
-            console.log(f'[yellow]Failed to download: {path}')
+            console.log(f'[yellow]Failed to download: {path}, e: {e}')
 
     else:
-        console.log("[red]SKIP ...")
+        console.log(f"[red]Skip file exist: {file_name}")
 

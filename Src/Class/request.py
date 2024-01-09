@@ -1,4 +1,7 @@
- # 31.12.23
+# 31.12.23
+
+# Class import
+from Src.Util.Helper.console import console
 
 # Import
 import requests, datetime, hashlib, sys, json
@@ -11,9 +14,14 @@ class OnlyRequest():
         self.profile_id = ""
 
     def get_rules(self):
-        self.rules = requests.get('https://raw.githubusercontent.com/DATAHOARDERS/dynamic-rules/main/onlyfans.json').json()
+        req = requests.get('https://raw.githubusercontent.com/DATAHOARDERS/dynamic-rules/main/onlyfans.json')
+        if req.ok:
+            self.rules = req.json()
+        else:
+            console.log(f"Cant get rules, error: {req.status_code}")
+            sys.exit(0)
 
-    def generata_auth(self):
+    def generate_auth(self):
         with open('Src/Util/Generator/config.json', 'r') as json_file:
             self.headers = json.load(json_file)
         
@@ -24,8 +32,8 @@ class OnlyRequest():
             query = '&'.join('='.join((key, str(val))) for (key, val) in queryParams.items())
             path = f"{path}?{query}"
 
-        unixtime = str(int(datetime.datetime.now().timestamp()))
-        msg = "\n".join([self.rules["static_param"], unixtime, path, self.headers["user-id"]])
+        unix_time = str(int(datetime.datetime.now().timestamp()))
+        msg = "\n".join([self.rules["static_param"], unix_time, path, self.headers["user-id"]])
         message = msg.encode("utf-8")
 
         hash_object = hashlib.sha1(message)
@@ -34,7 +42,7 @@ class OnlyRequest():
 
         checksum = sum([sha_1_b[number] for number in self.rules["checksum_indexes"]]) + self.rules["checksum_constant"]
         self.headers["sign"] = self.rules["format"].format(sha_1_sign, abs(checksum))
-        self.headers["time"] = unixtime
+        self.headers["time"] = unix_time
 
     def api_request(self, endpoint, postdata=None, getparams=None):
         #print(f"MAKE REQ, URL = {self.base_url + self.api_url + endpoint}, POST DATA = {postdata}, PARAMS = {getparams}")
@@ -44,7 +52,7 @@ class OnlyRequest():
             req =  requests.get(self.base_url + self.api_url + endpoint, headers=self.headers, params=getparams)
 
             if req.status_code != 200:
-                print(f"Error req [{req.status_code}] -> {req.json()}")
+                print(f"Error req -> {req.status_code}")
                 sys.exit(0)
 
             return req
