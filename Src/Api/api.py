@@ -80,15 +80,14 @@ class Call_api():
                 for j in range(post_n.n_media):
                     media = post_n.get_media(j)
 
-                    if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view):
+                    if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view) and media.url != None:
+
                         if media.get_ext() == ".jpg":
                             executor.submit(download, url=media.url, path=os.path.join(img_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
                         else:
                             executor.submit(download, url=media.url, path=os.path.join(video_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
 
-                    else:
-                        console.log(f"[red]Cant view: {media.id}")
-        # GO next
+        # Go next
         if home_api_post.has_more:
             self.download_posts(home_api_post.tail_marker)
 
@@ -105,15 +104,12 @@ class Call_api():
         for i in range(list_stories.n_media):
             media = list_stories.get_media(i)
             
-            if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view):
+            if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view) and media.url != None:
                 if media.get_ext() == ".jpg":
                     download(url=media.url, path=os.path.join(img_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
                 else:
                     download(url=media.url, path=os.path.join(video_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
             
-            else:
-                console.log(f"[red]Cant view: {media.id}")
-
     def __download_high_story__(self, id):
 
         json_stories = self.only_req.api_request(f"/stories/highlights/{id}").json()
@@ -127,14 +123,11 @@ class Call_api():
         for i in range(len(single_story.media)):
             media = single_story.get_media(i)
 
-            if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view):
+            if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view) and media.url != None:
                 if media.get_ext() == ".jpg":
                     download(url=media.url, path=os.path.join(img_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
                 else:
                     download(url=media.url, path=os.path.join(video_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
-                    
-            else:
-                console.log(f"[red]Cant view: {media.id}")
                 
     def download_high(self):
 

@@ -13,8 +13,15 @@ class Media():
     def get_ext(self):
         if self.type == "photo":
             return ".jpg"
-        if self.type == "video":
+        elif self.type == "video":
             return ".mp4"
+        elif self.type == "audio":
+            return ".mp3"
+        elif self.type == "gif":
+            return ".gif"
+        else:
+            print(f"CANT MANAGE: {self.type}")
+            return f".{self.type}"
 
     def to_string(self):
         print(self.__dict__)

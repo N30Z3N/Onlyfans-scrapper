@@ -6,9 +6,9 @@ import requests, time, os
 
 def download(url, path, headers=None, ss=2):
     file_name = path.split('\\')[-1]
-    console.log(f"[green]Save: [cyan]{file_name}")
 
     if not os.path.exists(path):
+        console.log(f"[green]Save: [cyan]{file_name}")
 
         try:
             req = requests.get(url, headers=headers)
