@@ -2,35 +2,22 @@
 
 class Media():
 
-    def __init__(self, json):
-        self.id = json['id']
-        self.type = json['type']
-        self.can_view = json['canView']
-        self.create_at = json['createdAt']
-        self.url = json['files']['source']['url']
-        self.preview = json['files']['preview']['url']
+    def __init__(self, json_data):
+        self.id = json_data['id']
+        self.type = json_data['type']
+        self.can_view = json_data['canView']
+        self.create_at = json_data['createdAt']
+        self.src = json_data['files']['source']['url']
+        self.preview = json_data['files']['preview']['url']
 
     def get_ext(self):
-        if self.type == "photo":
-            return ".jpg"
-        if self.type == "video":
-            return ".mp4"
+        if self.type == "photo": return ".jpg"
+        else: return ".mp4"
 
-    def to_string(self):
-        print(self.__dict__)
+    def is_valid(self):
+        return bool(self.id and self.get_ext() and self.can_view and self.src)
 
 class Home_stories():
-
-    def __init__(self, json):
-        self.n_media = len(json)
-        self.media = []
-
-        if self.n_media > 0:
-            for media in json:
-                self.media.append(Media(media['media'][0]))
-
-    def get_media(self, index) -> (Media):
-        return self.media[index]
-    
-    def to_string(self):
-        print(f"Find: {len(self.media)} media")
+    def __init__(self, json_data):
+        self.media = [Media(media['media'][0]) for media in json_data]
+        self.n_media = len(self.media)

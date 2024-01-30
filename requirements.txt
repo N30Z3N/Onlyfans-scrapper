@@ -4,5 +4,5 @@ rich
 tqdm
 selenium
 selenium-wire
-webdriver_manager
+webdriver-manager
 random-user-agent

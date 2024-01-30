@@ -3,50 +3,45 @@
 </p>
 
 # Only downloader
-Script to download file from OnlyFans (no payment media if not subscribe).
+OnlyDownloader is a script designed to download files from OnlyFans. This tool allows you to download avatar photos, stories, all posts, and all highlights.
 
 ## Requirement
 * chrome [win](https://www.google.it/intl/it/chrome/)
 * python [3.9](https://www.python.org/downloads/release/python-390/)
 
-## Installation library
+## Installation
+Use the following command to install the required libraries:
+
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 ## Features
 * Auto generate auth headers
 * Donwload avatar photo
 * Download stories
-* Download all post
-* Download all highlight
+* Download all posts
+* Download all highlights
 
-## How to auto generate headers ( Only on first run)
+## How to Automatically Generate Headers (Only on First Run)
 
 - First login
-
-> Write 'y' on question: 'Do you want to auto generare headers file? (With login)'
-> Write 'n' on question: 'Have yuo already logged in ?'
-> After doing this, Selenium will open the home page to log in with your credential.
-> After log in quit the code close Selenium page and run another time.
+> When prompted with 'Do you want to auto-generate headers file? (With login)', enter 'y'.
+> Enter 'n' when asked 'Have you already logged in?'.
+> Selenium will open the home page for you to log in with your credentials.
+> After logging in, close the Selenium page and run the code again.
 
 - Generator
-
-> Write 'y' on question: 'Do you want to auto generare headers file? (With login)'
-> Write 'y' on question: 'Have yuo already logged in ?'
-> After doing this, Selenium will open a minimize page and auto generate headers.
-> After that i will auto close the page and go on with the rest of the code.
-> Do this the firs time and if make error with calling api ( Error 400, 401, 402 )
+> When prompted with 'Do you want to auto-generate headers file? (With login)', enter 'y'.
+> Enter 'y' when asked 'Have you already logged in?'.
+> Selenium will open a minimized page and auto-generate headers.
+> The page will automatically close, and the code will proceed.
+> Use this step the first time and if you encounter errors while calling the API (Error 400, 401, 402).
 
 ## DISCLAIMERS
-<ul>
-    <li>
-        This tool is not affiliated, associated, or partnered with OnlyFans in any way. We are not authorized, endorsed, or sponsored by OnlyFans. All OnlyFans trademarks remain the property of Fenix International Limited.
-    </li>
-    <li>
-        This is a theoritical program only and is for educational purposes. If you choose to use it then it may or may not work. You solely accept full responsability and indemnify the creator, hostors, contributors and all other involved persons from any any all responsability.
-    </li>
-<h3>
+> This tool is not affiliated, associated, or partnered with OnlyFans in any way. We are not authorized, endorsed, or sponsored by OnlyFans. All OnlyFans trademarks remain the property of Fenix International Limited.
+
+> This is a theoritical program only and is for educational purposes. If you choose to use it then it may or may not work. You solely accept full responsability and indemnify the creator, hostors, contributors and all other involved persons from any any all responsability.
 
 ##
 - [@Ghost6446](https://www.github.com/Ghost6446)

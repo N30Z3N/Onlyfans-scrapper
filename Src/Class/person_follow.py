@@ -1,24 +1,13 @@
 # 31.12.23
 
 class Person():
-
-    def __init__(self, json):
-        self.id = json['id']
-        self.name = json['name']
-        self.username =  json['username']
-        self.avatar = json['avatar']
-        self.headers = json['header']
-
-    def to_string(self):
-        print(self.__dict__)
+    def __init__(self, json_data):
+        self.id = json_data['id']
+        self.name = json_data['name']
+        self.username =  json_data['username']
+        self.avatar = json_data['avatar']
+        self.headers = json_data['header']
 
 class ListPerson():
-
-    def __init__(self, json):
-        self.follows = [Person(json_person) for json_person in json['list']]
-
-    def get_person(self, index) -> (Person):
-        return self.follows[index]
-
-    def to_string(self):
-        print(f"Follows find: {len(self.follows)}")
+    def __init__(self, json_data):
+        self.follows = [Person(data_person) for data_person in json_data['list']]

@@ -1,7 +1,6 @@
 # 31.12.23
 
 class Person():
-
     def __init__(self, json):
         self.name= json['name']
         self.user= json['username']
@@ -12,6 +11,3 @@ class Person():
         self.n_audio= json['audiosCount']
         self.n_medias= json['mediasCount']
         self.join_data= str(json['joinDate']).split("T")[0]
-
-    def to_string(self):
-        print(self.__dict__)

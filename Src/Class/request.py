@@ -4,7 +4,7 @@
 from Src.Util.Helper.console import console
 
 # Import
-import requests, datetime, hashlib, sys, json
+import requests, time, hashlib, sys, json
 
 class OnlyRequest():
 
@@ -14,7 +14,7 @@ class OnlyRequest():
         self.profile_id = ""
 
     def get_rules(self):
-        req = requests.get('https://raw.githubusercontent.com/DATAHOARDERS/dynamic-rules/main/onlyfans.json')
+        req = requests.get('https://raw.githubusercontent.com/SneakyOvis/onlyfans-dynamic-rules/main/rules.json')
         if req.ok:
             self.rules = req.json()
         else:
@@ -26,44 +26,31 @@ class OnlyRequest():
             self.headers = json.load(json_file)
         
     def generate_sign(self, link, queryParams):
-
         path = self.api_url + link
-        if (queryParams):
+
+        if queryParams:
             query = '&'.join('='.join((key, str(val))) for (key, val) in queryParams.items())
             path = f"{path}?{query}"
 
-        unix_time = str(int(datetime.datetime.now().timestamp()))
-        msg = "\n".join([self.rules["static_param"], unix_time, path, self.headers["user-id"]])
-        message = msg.encode("utf-8")
+        timestamp = str(int(time.time() * 1000))
+        msg = '\n'.join([self.rules['static_param'], timestamp, path, self.headers["user-id"]]).encode('utf-8')
+        sha = hashlib.sha1(msg).hexdigest()
+        checksum = sum(ord(sha[n]) for n in self.rules['checksum_indexes']) + self.rules['checksum_constant']
+        
+        self.headers["sign"] = ':'.join([self.rules['prefix'], sha, '%x' % checksum, self.rules['suffix']])
+        self.headers["time"] = timestamp
 
-        hash_object = hashlib.sha1(message)
-        sha_1_sign = hash_object.hexdigest()
-        sha_1_b = sha_1_sign.encode("ascii")
+    def api_request(self, endpoint, getparams=None):
 
-        checksum = sum([sha_1_b[number] for number in self.rules["checksum_indexes"]]) + self.rules["checksum_constant"]
-        self.headers["sign"] = self.rules["format"].format(sha_1_sign, abs(checksum))
-        self.headers["time"] = unix_time
+        url = self.base_url + self.api_url + endpoint
+        self.generate_sign(endpoint, getparams)
 
-    def api_request(self, endpoint, postdata=None, getparams=None):
-        #print(f"MAKE REQ, URL = {self.base_url + self.api_url + endpoint}, POST DATA = {postdata}, PARAMS = {getparams}")
+        try:
+            response = requests.get(url, headers=self.headers, params=getparams)
+            response.raise_for_status()
+            return response
 
-        if postdata is None:
-            self.generate_sign(endpoint, getparams)
-            req =  requests.get(self.base_url + self.api_url + endpoint, headers=self.headers, params=getparams)
-
-            if req.status_code != 200:
-                print(f"Error req -> {req.status_code}")
-                sys.exit(0)
-
-            return req
-
-        else:
-            self.generate_sign(endpoint, getparams)
-            req =  requests.post(self.base_url + self.api_url + endpoint, headers=self.headers, params=getparams, data=postdata)
-            
-            if req.status_code != 200:
-                print(f"Error req [{req.status_code}] -> {req.json()}")
-                sys.exit(0)
-
-            return req
+        except requests.RequestException as e:
+            print(f"Error during API request: {e}")
+            sys.exit(1)
         

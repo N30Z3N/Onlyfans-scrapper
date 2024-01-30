@@ -14,7 +14,7 @@ def make_login():
 
     driver = Driver()
     driver.create(False)
-    console.log("[cyan]LOAD HOME PAGE")
+    console.log("[cyan]Load home page")
     driver.get_page("https://onlyfans.com/", 5)
     time.sleep(999)
 
@@ -22,7 +22,7 @@ def generate():
     
     driver = Driver()
     driver.create(False, False)
-    console.log("[cyan]LOAD HOME PAGE")
+    console.log("[cyan]Load home page")
     driver.get_page("https://onlyfans.com/", sleep_time)
 
     headers = None

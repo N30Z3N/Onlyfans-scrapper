@@ -1,36 +1,39 @@
 # 5.07.2023 -> 12.09.2023
 
-# General import
+# Class import
 from Src.Util.Helper.console import console
-import os, time, subprocess, sys
-from sys import platform
+
+# General import
+import os, time, subprocess, sys, platform
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-
 class Driver:
-
-    def close_chrome_instances(self):
-        if platform.startswith("linux"):
-            try: subprocess.check_output("pkill -f chrome", shell=True)
-            except: pass
-
-        elif platform == "win32":
-            try: subprocess.check_output("TASKKILL /IM chrome.exe /F", shell=True, creationflags=0x08000000)
-            except: pass
-
-    def __init__(self) -> None:
+    def __init__(self):
         self.close_chrome_instances()
         self.service = Service(ChromeDriverManager().install())
         self.options = webdriver.ChromeOptions()
+        self.driver = None
+
+    def close_chrome_instances(self):
+        console.log(f"[gree]Closing chrome ...")
+        try:
+            if platform.system() == "Linux":
+                subprocess.check_output("pkill -f chrome", shell=True)
+            elif platform.system() == "Windows":
+                subprocess.check_output("TASKKILL /IM chrome.exe /F", shell=True, creationflags=0x08000000)
+        except Exception as e:
+            pass
 
     def create(self, headless=False, minimize=False):
-        if headless: self.options.add_argument("headless")
+        if headless:
+            self.options.add_argument("headless")
         self.options.add_argument("--window-size=1280,1280")
 
         user_data_dir = os.path.join(os.path.expanduser('~'), 'AppData', 'Local', 'Google', 'Chrome', 'User Data')
-        if platform == "win32": user_data_dir = user_data_dir.replace('/', '\\')
+        if platform.system() == "Windows":
+            user_data_dir = user_data_dir.replace('/', '\\')
         self.options.add_argument(f'--user-data-dir={user_data_dir}')
 
         self.options.add_experimental_option("useAutomationExtension", True)
@@ -47,16 +50,16 @@ class Driver:
 
         if minimize:
             self.driver.minimize_window()
-            
+
     def get_page(self, url, sleep=1):
         try:
             self.driver.get(url)
             time.sleep(sleep)
-        except:
-            console.log(f"[red]Cant get url: [green]{url}")
+        except Exception as e:
+            console.log(f"[red]Can't get url: [green]{url}")
             sys.exit(0)
 
-    def close(self): 
+    def close(self):
         console.log("[red]Close driver")
         self.driver.close()
         self.driver.quit()

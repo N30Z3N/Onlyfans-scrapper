@@ -4,25 +4,26 @@
 from Src.Util.Helper.console import console
 import requests, time, os
 
-def download(url, path, headers=None, ss=2):
-    file_name = path.split('\\')[-1]
+def download(url, path, headers=None, sleep_seconds=2):
+    
+    file_name = os.path.basename(path)
 
-    if not os.path.exists(path):
-        console.log(f"[green]Save: [cyan]{file_name}")
+    if os.path.exists(path):
+        console.log(f"[red]Skip file exists: {file_name}")
+        return
 
-        try:
-            req = requests.get(url, headers=headers)
+    console.log(f"[red]Save: [cyan]{file_name}")
 
-            if(req.status_code == 200):
-                with open(path, 'wb+') as f:
-                    f.write(req.content)
-            else:
-                console.log(f"[red]Failed to download file: {path}, status: {req.status_code}")
-                time.sleep(ss)
+    try:
+        req = requests.get(url, headers=headers)
 
-        except Exception as e:
-            console.log(f'[yellow]Failed to download: {path}, e: {e}')
+        if req.status_code == 200:
+            with open(path, 'wb+') as f:
+                f.write(req.content)
+        else:
+            console.log(f"[red]Failed to download file: {path}, status: {req.status_code}")
+            time.sleep(sleep_seconds)
 
-    else:
-        console.log(f"[red]Skip file exist: {file_name}")
+    except Exception as e:
+        console.log(f'[yellow]Failed to download: {path}, error: {e}')
 

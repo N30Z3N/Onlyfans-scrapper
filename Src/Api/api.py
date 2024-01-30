@@ -7,6 +7,7 @@ from Src.Class.request import OnlyRequest
 from Src.Class.post import Home_post
 from Src.Class.stories import Home_stories
 from Src.Class.highlight import List_high, Single_stories
+from Src.Class.message import JsonResponse as MsgJsonResponse
 
 # Util import
 from Src.Util.Helper.download_file import download
@@ -30,22 +31,22 @@ class Call_api():
 
     def get_me(self):
 
-        json_me = self.only_req.api_request("/users/me").json()
+        console.print("[green]Checking user login ...")
+        json_me = self.only_req.api_request("/users/me/").json()
         self.me = Person(json_me)
 
-        console.log(f"[green]Me: [cyan]{self.me.__dict__}")
+        console.print(f"=> [red]Me: [cyan]{self.me.__dict__}")
 
     def get_follow(self):
 
-        json_follows = self.only_req.api_request(endpoint="/subscriptions/subscribes", getparams={'offset': '0','type': 'active','limit': '99','format': 'infinite'}).json()
+        json_follows = self.only_req.api_request(endpoint="/subscriptions/subscribes/", getparams={'offset': '0','type': 'active','limit': '99','format': 'infinite'}).json()
         self.list_follow = ListPerson(json_follows)
 
-        dict_follows = {i:self.list_follow.get_person(i).name for i in range(len(self.list_follow.follows))}
+        dict_follows = {i: person.name for i, person in enumerate(self.list_follow.follows)}
         answers = prompt([List('selected_follow', message='Select a person', choices=dict_follows.values())])
-        
-        id_user_select = {v: k for k, v in dict_follows.items()}.get(answers['selected_follow'])
+        index_user_select = {v: k for k, v in dict_follows.items()}.get(answers['selected_follow'])
 
-        self.person_select = self.list_follow.get_person(id_user_select)
+        self.person_select = self.list_follow.follows[index_user_select]
         console.log(f"[green]Select: [cyan]{self.person_select.username}")
 
         self.base_folder = os.path.join("data", str(self.person_select.username))
@@ -62,9 +63,9 @@ class Call_api():
     def download_posts(self, next_tail = None):
             
         if next_tail == None: 
-            json_first_post_json = self.only_req.api_request(endpoint=f"/users/{self.person_select.id}/posts", getparams={'limit': '20', 'order': 'publish_date_desc', 'skip_users': 'all', 'format': 'infinite', 'pinned': '0', 'counters': '1'}).json()
+            json_first_post_json = self.only_req.api_request(endpoint=f"/users/{self.person_select.id}/posts/", getparams={'limit': '20', 'order': 'publish_date_desc', 'skip_users': 'all', 'format': 'infinite', 'pinned': '0', 'counters': '1'}).json()
         else: 
-            json_first_post_json = self.only_req.api_request(endpoint=f"/users/{self.person_select.id}/posts", getparams={'limit': '20', 'order': 'publish_date_desc', 'skip_users': 'all', 'format': 'infinite', 'pinned': '0', 'counters': '1', 'beforePublishTime': next_tail}).json()
+            json_first_post_json = self.only_req.api_request(endpoint=f"/users/{self.person_select.id}/posts/", getparams={'limit': '20', 'order': 'publish_date_desc', 'skip_users': 'all', 'format': 'infinite', 'pinned': '0', 'counters': '1', 'beforePublishTime': next_tail}).json()
         
         home_api_post = Home_post(json_first_post_json)
 
@@ -73,19 +74,12 @@ class Call_api():
         os.makedirs(img_folder_path, exist_ok=True)
         os.makedirs(video_folder_path, exist_ok=True)
 
-        for k in range(home_api_post.n_post):
-            post_n = home_api_post.get_post(k)
-
+        for post_n in home_api_post.posts:
             with concurrent.futures.ThreadPoolExecutor(10) as executor:
-                for j in range(post_n.n_media):
-                    media = post_n.get_media(j)
-
-                    if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view) and media.url != None:
-
-                        if media.get_ext() == ".jpg":
-                            executor.submit(download, url=media.url, path=os.path.join(img_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
-                        else:
-                            executor.submit(download, url=media.url, path=os.path.join(video_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
+                for media in post_n.media:
+                    if media.is_valid():
+                        folder_path = img_folder_path if media.get_ext() == ".jpg" else video_folder_path
+                        download(url=media.src, path=os.path.join(folder_path, f"{media.id}{media.get_ext()}"), headers={"user-agent": get_headers()})
 
         # Go next
         if home_api_post.has_more:
@@ -93,7 +87,7 @@ class Call_api():
 
     def download_stories(self):
 
-        json_stories = self.only_req.api_request(f"/users/{self.person_select.id}/stories").json()
+        json_stories = self.only_req.api_request(f"/users/{self.person_select.id}/stories/").json()
         list_stories = Home_stories(json_stories)
 
         img_folder_path = os.path.join(self.base_folder, "stories\\images")
@@ -101,18 +95,14 @@ class Call_api():
         os.makedirs(img_folder_path, exist_ok=True)
         os.makedirs(video_folder_path, exist_ok=True)
 
-        for i in range(list_stories.n_media):
-            media = list_stories.get_media(i)
-            
-            if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view) and media.url != None:
-                if media.get_ext() == ".jpg":
-                    download(url=media.url, path=os.path.join(img_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
-                else:
-                    download(url=media.url, path=os.path.join(video_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
+        for media in list_stories.media:
+            if media.is_valid():
+                folder_path = img_folder_path if media.get_ext() == ".jpg" else video_folder_path
+                download(url=media.src, path=os.path.join(folder_path, f"{media.id}{media.get_ext()}"), headers={"user-agent": get_headers()})
             
     def __download_high_story__(self, id):
 
-        json_stories = self.only_req.api_request(f"/stories/highlights/{id}").json()
+        json_stories = self.only_req.api_request(f"/stories/highlights/{id}/").json()
         single_story = Single_stories(json_stories)
 
         img_folder_path = os.path.join(self.base_folder, "highlights\\images")
@@ -120,23 +110,52 @@ class Call_api():
         os.makedirs(img_folder_path, exist_ok=True)
         os.makedirs(video_folder_path, exist_ok=True)
 
-        for i in range(len(single_story.media)):
-            media = single_story.get_media(i)
-
-            if ( str(media.id) != None or media.get_ext() != None ) and bool(media.can_view) and media.url != None:
-                if media.get_ext() == ".jpg":
-                    download(url=media.url, path=os.path.join(img_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
-                else:
-                    download(url=media.url, path=os.path.join(video_folder_path, str(media.id) + media.get_ext()), headers={"user-agent": get_headers()})
+        for media in single_story.media:
+            if media.is_valid():
+                folder_path = img_folder_path if media.get_ext() == ".jpg" else video_folder_path
+                download(url=media.src, path=os.path.join(folder_path, f"{media.id}{media.get_ext()}"), headers={"user-agent": get_headers()})
                 
     def download_high(self):
 
-        json_highs = self.only_req.api_request(endpoint=f"/users/{self.person_select.id}/stories/highlights", getparams={'limit': '999', 'offset': '0'}).json()
+        json_highs = self.only_req.api_request(endpoint=f"/users/{self.person_select.id}/stories/highlights/", getparams={'limit': '999', 'offset': '0'}).json()
         list_highs = List_high(json_highs)
 
-        for i in range(len(list_highs.list_hig)):
-            obj_high = list_highs.get_high(i)
+        for obj_high in list_highs.list_high:
             self.__download_high_story__(obj_high.id)
             
+    def get_list_chats(self, has_more = False, next_id = None, right_id_select=None):
 
-        
+        if not has_more and right_id_select is not None:
+            console.log("[red]End get chat\n")
+            return
+
+        if not has_more:
+            json_chat = self.only_req.api_request(endpoint="/chats/", getparams={'limit': '100', 'offset': '0', 'skip_users': 'all', 'order': 'recent'})
+
+            dict_user_chat_id = {i: msg['withUser']['id'] for i, msg in enumerate(json_chat.json()['list'])}
+            answers = prompt([List('select_id', message='Select a chat id', choices=dict_user_chat_id.values())])
+            id_user_select = {v: k for k, v in dict_user_chat_id.items()}.get(answers['select_id'])
+
+            right_id_select = dict_user_chat_id.get(id_user_select)
+            json_user_id = self.only_req.api_request(endpoint=f"/chats/{right_id_select}/messages/", getparams={'limit': '100', 'order': 'desc', 'skip_users': 'all'})
+            
+        else:
+            json_user_id = self.only_req.api_request(endpoint=f"/chats/{right_id_select}/messages/", getparams={'limit': '100', 'order': 'desc', 'skip_users': 'all', 'id': next_id})
+
+        img_folder_path = os.path.join(f"data\\chats\\{str(right_id_select)}\\images")
+        video_folder_path = os.path.join(f"data\\chats\\{str(right_id_select)}\\videos")
+        os.makedirs(img_folder_path, exist_ok=True)
+        os.makedirs(video_folder_path, exist_ok=True)
+
+        user_data = MsgJsonResponse(json_user_id.json())
+        next_has_more = user_data.hasMore
+        next_use_id = user_data.list[-1].id
+
+        for msg in user_data.list:
+            if msg.mediaCount > 0:
+                for media in msg.media:
+                    if media.is_valid():
+                        folder_path = img_folder_path if media.get_ext() == ".jpg" else video_folder_path
+                        download(url=media.src, path=os.path.join(folder_path, f"{media.id}{media.get_ext()}"), headers={"user-agent": get_headers()})
+
+        self.get_list_chats(next_has_more, next_use_id, right_id_select)
