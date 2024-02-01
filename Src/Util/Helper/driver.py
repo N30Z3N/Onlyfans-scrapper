@@ -17,7 +17,8 @@ class Driver:
         self.driver = None
 
     def close_chrome_instances(self):
-        console.log(f"[gree]Closing chrome ...")
+        print("\n")
+        console.log(f"[green]Closing chrome ...")
         try:
             if platform.system() == "Linux":
                 subprocess.check_output("pkill -f chrome", shell=True)

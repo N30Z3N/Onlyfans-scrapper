@@ -35,18 +35,18 @@ def main():
     except: 
         console.log("[red]Cant connect to github \n")
 
-    console.print("[green]Checking json file ...")
-    if check_json_variables(r".\Src\Util\Generator\config.json"):
-        console.print("[red]=> Json file valid \n")
-    else:
-        console.log("[red]Json file is not valid (retry generator)")
-        sys.exit(0)
-
     if msg.ask("[green]Do you want to auto generate headers file? (With login)") == "y":
         if msg.ask("[green]Have you already logged in ?") == "n":
             make_login()
         else:
             generate()
+
+    console.print("\n[green]Checking json file ...")
+    if check_json_variables(r".\Src\Util\Generator\config.json"):
+        console.print("[red]=> Json file valid \n")
+    else:
+        console.log("[red]Json file is not valid (retry generator)")
+        sys.exit(0)
 
     print("\n")
     call_api.get_me()
