@@ -36,7 +36,9 @@ def generate():
     if headers != None:
 
         for col in ['user-agent', 'app-token', 'accept', 'x-bc', 'accept-encoding', 'accept-language']:
-            auth_headers[col] = headers[col]
+            for head_col in headers:
+                if head_col.lower() == col:
+                    auth_headers[col] = headers[head_col]
 
         cookie_string = ("{" + str(headers['cookie']).replace("; ", "', '").replace("=", "':'") + "}")[1:-1]
         cookie_pairs = [pair.split("':'") for pair in cookie_string.split("', '")]
